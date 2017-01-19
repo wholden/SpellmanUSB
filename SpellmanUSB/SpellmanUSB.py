@@ -30,7 +30,7 @@ class Spellman():
                                 'Filament Limit':{'setcmd':13,'getcmd':17,'scalefactor':10}}
         self.statusdict =  {'arg1':{'1':'HVon','0':'HVoff'},
                             'arg2':{'1':'Interlock Open','0':'Interlock Closed'},
-                            'arg3':{'1':'Fault Condition':'0':'No Fault'}}
+                            'arg3':{'1':'Fault Condition','0':'No Fault'}}
         self.monitordict = {'arg1':{'name':'Control Board Temperature(C)','scalefactor':300},
                             'arg2':{'name':'Low Voltage Supply Monitor (V)','scalefactor':42.9},
                             'arg3':{'name':'kV Feedback','scalefactor':50},
