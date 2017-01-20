@@ -28,9 +28,9 @@ class Spellman():
                                 'mA Output Setpoint':{'setcmd':11,'getcmd':15,'scalefactor':2},
                                 'Filament Preheat':{'setcmd':12,'getcmd':16,'scalefactor':10},
                                 'Filament Limit':{'setcmd':13,'getcmd':17,'scalefactor':10}}
-        self.statusdict =  {'arg1':{'1':'HVon','0':'HVoff'},
-                            'arg2':{'1':'Interlock Open','0':'Interlock Closed'},
-                            'arg3':{'1':'Fault Condition','0':'No Fault'}}
+        self.statusdict =  {'arg1':{1:'HV on',0:'HV off'},
+                            'arg2':{1:'Interlock Open',0:'Interlock Closed'},
+                            'arg3':{1:'Fault Condition',0:'No Fault'}}
         self.monitordict = {'arg1':{'name':'Control Board Temperature(C)','scalefactor':300},
                             'arg2':{'name':'Low Voltage Supply Monitor (V)','scalefactor':42.9},
                             'arg3':{'name':'kV Feedback','scalefactor':50},
@@ -45,7 +45,7 @@ class Spellman():
         return chr(chksum).encode('ascii')
     
     def make_cmdstr(self,cmd,arg=None):
-        if not arg:
+        if arg is None:
             cmdstr = str(cmd)+','
         else:
             cmdstr = str(cmd)+','+str(arg)+','
@@ -59,7 +59,10 @@ class Spellman():
         outstr = ''.join([chr(c) for c in crop])
         assert self.calc_checksum(outstr[:-1].encode()) == outstr[-1].encode(), "Checksum error for USB-Spellman communication."
         responselist = outstr.split(',')
-        responsedict = dict(cmd=int(responselist.pop(0)),chksum=responselist.pop())
+        #responsedict = dict(cmd=int(responselist.pop(0)),chksum=responselist.pop())
+        #ignoring chksum and cmd in response
+        responselist = responselist[1:-1]
+        responsedict={}
         for i, v in enumerate(responselist):
             k='arg%d'%(i+1)
             try:
@@ -81,7 +84,7 @@ class Spellman():
         response = self.sendrecv(20)
         for k, v in response.items():
             val = self.adc_scale(k,v)
-            print(k+': '+str(val))
+            print(self.monitordict[k]['name']+': '+str(val))
             
     def adc_scale(self,key,val):
         return val*self.monitordict[key]['scalefactor']/4095
@@ -106,7 +109,11 @@ class Spellman():
     def change_setpoint(self,key,val):
         # Still a work in progress here
         dacvalue = self.dac_scale(key,val)
-        response = self.sendrecv(self.setpointdict[key],arg=dacvalue)
+        response = self.sendrecv(self.setpointdict[key]['setcmd'],arg=dacvalue)
+        if response['arg1'] == '$':
+            print(key+' changed to: '+str(val))
+        else:
+            print('Error, setpoint not changed.')
         return response
 
     def engage_high_voltage(self):
@@ -119,7 +126,7 @@ class Spellman():
             print('Interlock is open, high voltage disabled.')
         return response['arg1']
 
-    def engage_high_voltage(self):
+    def disengage_high_voltage(self):
         response = self.sendrecv(99,arg=0)
         if response['arg1'] == '$':
             print('High voltage OFF.')
@@ -137,3 +144,6 @@ class Spellman():
         response = self.sendrecv(22)
         for k, v in response.items():
             print(self.statusdict[k][v])
+    
+    def close_usb_connection(self):
+        self.h.close()
