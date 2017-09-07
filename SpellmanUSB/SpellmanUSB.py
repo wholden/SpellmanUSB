@@ -147,3 +147,9 @@ class Spellman():
     
     def close_usb_connection(self):
         self.h.close()
+
+    def clear_setpoints(self):
+        self.change_setpoint('Filament Limit',0)
+        self.change_setpoint('Filament Preheat',0)
+        self.change_setpoint('kV Setpoint',0)
+        self.change_setpoint('mA Output Setpoint',0)
