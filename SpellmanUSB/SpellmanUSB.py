@@ -2,7 +2,7 @@ import hid
 import time
 import numpy as np
 
-class Spellman():
+class SpellmanClass():
     
     def __init__(self):
         self.h = hid.device()
@@ -130,7 +130,10 @@ class Spellman():
         self.change_setpoint('kV Setpoint',0)
         self.change_setpoint('mA Output Setpoint',0)
 
-spellman = None
+    def initialize_setpoints(self):
+        self.change_setpoint('Filament Limit',3.1)
+        self.change_setpoint('Filament Preheat',1.5)
+        self.change_setpoint('kV Setpoint',25)
+        self.change_setpoint('mA Output Setpoint',1)
 
-def initialize():
-    spellman = Spellman()
+spellman = SpellmanClass()
