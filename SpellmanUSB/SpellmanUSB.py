@@ -43,8 +43,7 @@ class SpellmanClass():
         outstr = ''.join([chr(c) for c in crop])
         assert self.calc_checksum(outstr[:-1].encode()) == outstr[-1].encode(), "Checksum error for USB-Spellman communication."
         responselist = outstr.split(',')
-        #ignoring chksum and cmd in response
-        responselist = responselist[1:-1]
+        responselist = responselist[1:-1]#remove chksum and cmd in response
         responsedict={}
         for i, v in enumerate(responselist):
             k='arg%d'%(i+1)
