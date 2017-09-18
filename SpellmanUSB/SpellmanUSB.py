@@ -8,22 +8,6 @@ class Spellman():
         self.h = hid.device()
         self.h.open(0x1200,0x001)
         self.h.set_nonblocking(1)
-        # self.adcscaledict = dict([('kV Feedback',50),
-        #                         ('kV Feedback 2',55),
-        #                         ('mA Feedback',2.4),
-        #                         ('Filament Current(A)', 3.6),
-        #                         ('Filament Voltage(V)',5.5),
-        #                         ('Control Board Temperature(C)',300),
-        #                         ('High Voltage Bd Temperature(C)',300),
-        #                         ('Low Voltage Supply Monitor (V)',42.9)])
-        # self.dacscaledict=dict([('kV Setpoint',50),
-        #                       ('mA Output Setpoint',2),
-        #                       ('Filament Preheat',10),
-        #                       ('Filament Limit',10)])
-        # self.cmddict=dict([(14,'Request kV Setpoint'),
-        #                    (15,'Request mA Output Setpoint'),
-        #                    (16,'Request Filament Preheat'),
-        #                    (17,'Request Filament Limit')])
         self.setpointdict = {'kV Setpoint':{'setcmd':10,'getcmd':14,'scalefactor':50},
                                 'mA Output Setpoint':{'setcmd':11,'getcmd':15,'scalefactor':2},
                                 'Filament Preheat':{'setcmd':12,'getcmd':16,'scalefactor':10},
@@ -59,7 +43,6 @@ class Spellman():
         outstr = ''.join([chr(c) for c in crop])
         assert self.calc_checksum(outstr[:-1].encode()) == outstr[-1].encode(), "Checksum error for USB-Spellman communication."
         responselist = outstr.split(',')
-        #responsedict = dict(cmd=int(responselist.pop(0)),chksum=responselist.pop())
         #ignoring chksum and cmd in response
         responselist = responselist[1:-1]
         responsedict={}
@@ -76,11 +59,7 @@ class Spellman():
         return self.parse_output(self.h.read(53,100))  
     
     def monitor_readbacks(self):
-        # self.h.send_feature_report(self.make_cmdstr(20))
-        # output = self.h.get_feature_report(1,27)
-        # responsedict = self.parse_output(output)
-        # for k,v in msgdict.items():
-        #     print(msgdict[k]+'\t'+str(self.adc_scale(responsedict[k],v)))
+
         response = self.sendrecv(20)
         for k, v in response.items():
             val = self.adc_scale(k,v)
@@ -99,9 +78,6 @@ class Spellman():
         response = {}
         for k, v in self.setpointdict.items():
             response[k]=self.sendrecv(v['getcmd'])
-        #response = [self.sendrecv(i) for i in (14,15,16,17)]
-        #for r in response:
-        #    print(self.cmddict[r['cmd']]+': '+str(self.dac_scale(r['arg1'],self.cmddict[r['cmd']][8:])))
         for k, v in response.items():
             print('Current '+k+': '+str(self.dac_readback(k,v['arg1'])))
         return response
@@ -153,3 +129,8 @@ class Spellman():
         self.change_setpoint('Filament Preheat',0)
         self.change_setpoint('kV Setpoint',0)
         self.change_setpoint('mA Output Setpoint',0)
+
+spellman = None
+
+def initialize():
+    spellman = Spellman()
