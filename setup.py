@@ -4,5 +4,5 @@ import os
 setup(name = 'SpellmanUSB',
     packages = ['SpellmanUSB'],
     package_dir={'SpellmanUSB':'SpellmanUSB'},
-    install_requires = ['numpy'],
+    install_requires = ['numpy','hid'],
     zip_safe = False)

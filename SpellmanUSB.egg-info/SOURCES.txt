@@ -1,9 +1,0 @@
-setup.py
-SpellmanUSB/SpellmanUSB.py
-SpellmanUSB/__init__.py
-SpellmanUSB.egg-info/PKG-INFO
-SpellmanUSB.egg-info/SOURCES.txt
-SpellmanUSB.egg-info/dependency_links.txt
-SpellmanUSB.egg-info/not-zip-safe
-SpellmanUSB.egg-info/requires.txt
-SpellmanUSB.egg-info/top_level.txt
