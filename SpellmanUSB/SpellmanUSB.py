@@ -135,4 +135,8 @@ class SpellmanClass():
         self.change_setpoint('kV Setpoint',25)
         self.change_setpoint('mA Output Setpoint',1)
 
-spellman = SpellmanClass()
+spellman = None
+
+def initialize():
+    global spellman
+    spellman = SpellmanClass()
