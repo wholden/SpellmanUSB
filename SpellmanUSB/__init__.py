@@ -60,7 +60,6 @@ def sendrecv(cmd,arg=None):
     return parse_output(hidhandle.read(53,100))  
 
 def monitor_readbacks():
-
     response = sendrecv(20)
     for k, v in response.items():
         val = adc_scale(k,v)
@@ -84,7 +83,6 @@ def check_setpoints():
     return response
 
 def change_setpoint(key,val):
-    # Still a work in progress here
     dacvalue = dac_scale(key,val)
     response = sendrecv(setpointdict[key]['setcmd'],arg=dacvalue)
     if response['arg1'] == '$':
@@ -124,15 +122,3 @@ def request_status():
 
 def close_usb_connection():
     hidhandle.close()
-
-def clear_setpoints():
-    change_setpoint('Filament Limit',0)
-    change_setpoint('Filament Preheat',0)
-    change_setpoint('kV Setpoint',0)
-    change_setpoint('mA Output Setpoint',0)
-
-def initialize_setpoints():
-    change_setpoint('Filament Limit',3.1)
-    change_setpoint('Filament Preheat',1.5)
-    change_setpoint('kV Setpoint',25)
-    change_setpoint('mA Output Setpoint',1)
