@@ -1,8 +1,4 @@
-def clear_setpoints():
-    change_setpoint('Filament Limit',0)
-    change_setpoint('Filament Preheat',0)
-    change_setpoint('kV Setpoint',0)
-    change_setpoint('mA Output Setpoint',0)
+from SpellmanUSB import change_setpoint
 
 def initialize_setpoints():
     change_setpoint('Filament Limit',3.1)

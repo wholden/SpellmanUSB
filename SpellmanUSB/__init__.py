@@ -122,3 +122,10 @@ def request_status():
 
 def close_usb_connection():
     hidhandle.close()
+
+def clear_setpoints():
+    change_setpoint('Filament Limit',0)
+    change_setpoint('Filament Preheat',0)
+    change_setpoint('kV Setpoint',0)
+    change_setpoint('mA Output Setpoint',0)
+
