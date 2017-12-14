@@ -66,7 +66,6 @@ def monitor_readbacks():
         val = adc_scale(k,v)
         readbacks[monitordict[k]['name']]=val
     return readbacks
-        # print(monitordict[k]['name']+': '+str(val))
         
 def adc_scale(key,val):
     return val*monitordict[key]['scalefactor']/4095
@@ -81,9 +80,11 @@ def check_setpoints():
     response = {}
     for k, v in setpointdict.items():
         response[k]=sendrecv(v['getcmd'])
+    setpoints = {}
     for k, v in response.items():
-        print('Current '+k+': '+str(dac_readback(k,v['arg1'])))
-    return response
+        setpoints[k]=dac_readback(k,v['arg1'])
+        # print('Current '+k+': '+str(dac_readback(k,v['arg1'])))
+    return setpoints
 
 def change_setpoint(key,val):
     dacvalue = dac_scale(key,val)
