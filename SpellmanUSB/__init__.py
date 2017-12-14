@@ -61,9 +61,12 @@ def sendrecv(cmd,arg=None):
 
 def monitor_readbacks():
     response = sendrecv(20)
+    readbacks = {}
     for k, v in response.items():
         val = adc_scale(k,v)
-        print(monitordict[k]['name']+': '+str(val))
+        readbacks[monitordict[k]['name']]=val
+    return readbacks
+        # print(monitordict[k]['name']+': '+str(val))
         
 def adc_scale(key,val):
     return val*monitordict[key]['scalefactor']/4095
