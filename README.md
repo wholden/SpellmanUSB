@@ -5,6 +5,14 @@ A python library for controlling a Spellman high voltage power supply with Pytho
 This library has been tested with a Spellman uX series power supply (https://www.spellmanhv.com/en/Products/uX).  The spellman communicates using a human interface device (HID) USB protocol.  Using the hidapi library makes communications straightforward, and the only task that remains is programming the various commands with their command numbers, and taking care of the checksum.  These were done using the spellman manual.
 (last checked downloadable 10/16/17:https://www.spellmanhv.com/-/media/en/Technical-Resources/Manuals/uXMAN.pdf)
 
-This may be compatible with Spellman series other than the uX (like the uXHP for example), that rely on the same communications board, but they have not been tested.  The only modifications needed in that case would be the scalefactors set in the configuration dictionaries (see __init__.py).
+This may be compatible with Spellman series other than the uX (like the uXHP for example), that rely on the same communications board, but they have not been tested.  The only modifications needed in that case would be the scalefactors set in the configuration dictionaries (see ```__init__.py```).
 
-Some user specific scripts have been written for our application in the userscripts.py file, while the main code in __init__.py has been kept generalized.
+Some user specific scripts have been written for our application in the userscripts.py file, while the main code in ```__init__.py``` has been kept generalized.
+
+Most likely, to be able to run without superuser permissions, you'll need to install the udev rules file, spellman.rules.
+To do that:
+  sudo install spellman.rules /etc/udev/rules.d/
+  sudo udevadm control -- reload
+  
+The first line just copies the rules to the proper directory.
+The second line reloads udev rules without having to restart. On future reboots, the rule loads automatically and this command does not need to be run.
