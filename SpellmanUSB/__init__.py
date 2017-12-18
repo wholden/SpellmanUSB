@@ -8,9 +8,9 @@ setpointdict = {'kV Setpoint':{'setcmd':10,'getcmd':14,'scalefactor':50},
                         'mA Output Setpoint':{'setcmd':11,'getcmd':15,'scalefactor':2},
                         'Filament Preheat':{'setcmd':12,'getcmd':16,'scalefactor':10},
                         'Filament Limit':{'setcmd':13,'getcmd':17,'scalefactor':10}}
-statusdict =  {'arg1':{1:'HV on',0:'HV off'},
-                    'arg2':{1:'Interlock Open',0:'Interlock Closed'},
-                    'arg3':{1:'Fault Condition',0:'No Fault'}}
+statusdict =  {'arg1':{'name':'hv',1:'HV on',0:'HV off'},
+                    'arg2':{'name':'interlock',1:'Interlock Open',0:'Interlock Closed'},
+                    'arg3':{'name':'fault',1:'Fault Condition',0:'No Fault'}}
 monitordict = {'arg1':{'name':'Control Board Temperature(C)','scalefactor':300},
                     'arg2':{'name':'Low Voltage Supply Monitor (V)','scalefactor':42.9},
                     'arg3':{'name':'kV Feedback','scalefactor':50},
@@ -121,8 +121,11 @@ def reset_faults():
 
 def request_status():
     response = sendrecv(22)
+    status={}
     for k, v in response.items():
+        status[statusdict[k]['name']]=v
         print(statusdict[k][v])
+    return status
 
 def close_usb_connection():
     hidhandle.close()

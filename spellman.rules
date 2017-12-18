@@ -1,0 +1,2 @@
+ATTR{idVendor}=="1200" ATTR{idProduct}=="0001" GROUP="users", MODE="0666"
+
