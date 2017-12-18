@@ -10,9 +10,10 @@ This may be compatible with Spellman series other than the uX (like the uXHP for
 Some user specific scripts have been written for our application in the userscripts.py file, while the main code in ```__init__.py``` has been kept generalized.
 
 Most likely, to be able to run without superuser permissions, you'll need to install the udev rules file, spellman.rules.
-To do that:
-  sudo install spellman.rules /etc/udev/rules.d/
-  sudo udevadm control -- reload
+To do that:  
+
+    sudo install spellman.rules /etc/udev/rules.d/  
+    sudo udevadm control -- reload  
   
 The first line just copies the rules to the proper directory.
 The second line reloads udev rules without having to restart. On future reboots, the rule loads automatically and this command does not need to be run.
