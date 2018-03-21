@@ -1,6 +1,9 @@
 import hid
 import time
 import numpy as np
+import logging
+
+logger = logging.getLogger(__name__)
 
 hidhandle = None
 
@@ -41,7 +44,11 @@ def make_cmdstr(cmd,arg=None):
     return [i for i in msgstr]
 
 def parse_output(outbytelist):
-    crop = outbytelist[1:outbytelist.index(3)]
+    try:
+        crop = outbytelist[1:outbytelist.index(3)]
+    except ValueError:
+        logger.Warning('Read error. Could not parse Spellman output string.')
+        return 'readerr'
     outstr = ''.join([chr(c) for c in crop])
     assert calc_checksum(outstr[:-1].encode()) == outstr[-1].encode(), "Checksum error for USB-Spellman communication."
     responselist = outstr.split(',')
@@ -83,7 +90,6 @@ def check_setpoints():
     setpoints = {}
     for k, v in response.items():
         setpoints[k]=dac_readback(k,v['arg1'])
-        # print('Current '+k+': '+str(dac_readback(k,v['arg1'])))
     return setpoints
 
 def change_setpoint(key,val):
