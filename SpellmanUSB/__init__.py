@@ -47,7 +47,7 @@ def parse_output(outbytelist):
     try:
         crop = outbytelist[1:outbytelist.index(3)]
     except ValueError:
-        logger.Warning('Read error. Could not parse Spellman output string.')
+        logger.warning('Read error. Could not parse Spellman output string.')
         return 'readerr'
     outstr = ''.join([chr(c) for c in crop])
     assert calc_checksum(outstr[:-1].encode()) == outstr[-1].encode(), "Checksum error for USB-Spellman communication."
