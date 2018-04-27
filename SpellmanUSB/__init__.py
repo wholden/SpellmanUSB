@@ -96,29 +96,29 @@ def change_setpoint(key,val):
     dacvalue = dac_scale(key,val)
     response = sendrecv(setpointdict[key]['setcmd'],arg=dacvalue)
     if response['arg1'] == '$':
-        print(key+' changed to: '+str(val))
+        logger.debug(key+' changed to: '+str(val))
     else:
-        print('Error, setpoint not changed.')
+        logger.debug('Error, setpoint not changed.')
     return response
 
 def engage_high_voltage():
     response = sendrecv(99,arg=1)
     if response['arg1'] == '$':
-        print('High voltage ON.')
+        logger.debug('High voltage ON.')
     elif response['arg1'] == '1':
-        print('Programming error, high voltage NOT engaged.')
+        logger.debug('Programming error, high voltage NOT engaged.')
     elif response['arg1'] == '0':
-        print('Interlock is open, high voltage disabled.')
+        logger.debug('Interlock is open, high voltage disabled.')
     return response['arg1']
 
 def disengage_high_voltage():
     response = sendrecv(99,arg=0)
     if response['arg1'] == '$':
-        print('High voltage OFF.')
+        logger.debug('High voltage OFF.')
     elif response['arg1'] == '1':
-        print('Programming error, high voltage NOT engaged.')
+        logger.debug('Programming error, high voltage NOT engaged.')
     elif response['arg1'] == '0':
-        print('Interlock is open, high voltage disabled.')
+        logger.debug('Interlock is open, high voltage disabled.')
     return response['arg1']
 
 def reset_faults():
@@ -130,7 +130,7 @@ def request_status():
     status={}
     for k, v in response.items():
         status[statusdict[k]['name']]=v
-        print(statusdict[k][v])
+        logger.debug(statusdict[k][v])
     return status
 
 def close_usb_connection():
