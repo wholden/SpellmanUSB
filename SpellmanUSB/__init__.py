@@ -74,7 +74,7 @@ def monitor_readbacks():
             val = adc_scale(k,v)
             readbacks[monitordict[k]['name']]=val
         return readbacks
-    except TypeError:
+    except (TypeError, AttributeError):
         res = {}
         for _, d in monitordict.items():
             res[d['name']] = 'ReadError'
