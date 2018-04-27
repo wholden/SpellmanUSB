@@ -67,12 +67,18 @@ def sendrecv(cmd,arg=None):
     return parse_output(hidhandle.read(53,100))  
 
 def monitor_readbacks():
-    response = sendrecv(20)
-    readbacks = {}
-    for k, v in response.items():
-        val = adc_scale(k,v)
-        readbacks[monitordict[k]['name']]=val
-    return readbacks
+    try:
+        response = sendrecv(20)
+        readbacks = {}
+        for k, v in response.items():
+            val = adc_scale(k,v)
+            readbacks[monitordict[k]['name']]=val
+        return readbacks
+    except TypeError:
+        res = {}
+        for _, d in monitordict.items():
+            res[d['name']] = 'ReadError'
+        return res
         
 def adc_scale(key,val):
     return val*monitordict[key]['scalefactor']/4095
@@ -84,13 +90,19 @@ def dac_readback(key,val):
     return val/4095*setpointdict[key]['scalefactor']   
 
 def check_setpoints():
-    response = {}
-    for k, v in setpointdict.items():
-        response[k]=sendrecv(v['getcmd'])
-    setpoints = {}
-    for k, v in response.items():
-        setpoints[k]=dac_readback(k,v['arg1'])
-    return setpoints
+    try:
+        response = {}
+        for k, v in setpointdict.items():
+            response[k]=sendrecv(v['getcmd'])
+        setpoints = {}
+        for k, v in response.items():
+            setpoints[k]=dac_readback(k,v['arg1'])
+        return setpoints
+    except TypeError:
+        res = {}
+        for k in setpointdict.keys():
+            res[k] = 'ReadError'
+        return res
 
 def change_setpoint(key,val):
     dacvalue = dac_scale(key,val)
